@@ -6,10 +6,12 @@ class Node
   end
 
   def open_slot
-    @position.each_index do |row|
-      @position[row].each_index do |col|
-        if @position[row][col] == " "
-          return TilePosition.new(row, col)
+    @open_slot ||= begin
+      @position.each_index do |row|
+        @position[row].each_index do |col|
+          if @position[row][col] == " "
+            return TilePosition.new(row, col)
+          end
         end
       end
     end
@@ -49,8 +51,8 @@ class Node
     @position == other_node.position
   end
 
-  def hash
-    @position.hash
+  def to_s
+    @position.map { |row| row.join("") }.join("\n")
   end
 end
 
@@ -63,14 +65,16 @@ class Edge
   end
 
   def node
-    Node.new(new_position)
+    @node ||= Node.new(new_position)
   end
 
   def new_position
-    new_position = @origin.position.map { |row| row.clone }
-    new_position[old_open_slot.row][old_open_slot.col] = new_position[new_open_slot.row][new_open_slot.col]
-    new_position[new_open_slot.row][new_open_slot.col] = " "
-    new_position
+    @new_position ||= begin
+      new_position = @origin.position.map { |row| row.clone }
+      new_position[old_open_slot.row][old_open_slot.col] = new_position[new_open_slot.row][new_open_slot.col]
+      new_position[new_open_slot.row][new_open_slot.col] = " "
+      new_position
+    end
   end
 
   def old_open_slot
@@ -100,19 +104,5 @@ class TilePosition
 
   def ==(other_position)
     @row == other_position.row and @col = other_position.col
-  end
-end
-
-class Path
-  def initialize(moves)
-    @moves = moves
-  end
-
-  def checksum
-    checksum = 0
-    @moves.each do |move|
-      checksum = (checksum*243 + move) % 100000007
-    end
-    checksum
   end
 end

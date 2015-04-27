@@ -1,4 +1,5 @@
 require 'graph'
+require 'search'
 
 describe "open slot" do
   it "is in the top left" do
@@ -120,18 +121,17 @@ describe "graph node" do
                                  ["R", "R", "B", "B"],
                                  ["R", "R", "B", "B"]])
   end
-
-  it "has the same hash function as its position" do
-    position = [["R", " ", "B", "B"],
-                ["R", "R", "B", "B"],
-                ["R", "R", "B", "B"],
-                ["R", "R", "B", "B"]]
-    expect(Node.new(position).hash).to eq position.hash
-  end
 end
 
 describe "checksum" do
   it "computes the example checksum correctly" do
-    expect(Path.new([76, 85, 76, 85, 82]).checksum).to eq 19761398
+    path = Path.new(Node.new([[" ", "R", "B", "B"],
+                              ["R", "R", "B", "B"],
+                              ["R", "R", "B", "B"],
+                              ["R", "R", "B", "B"]]))
+    ["L", "U", "L", "U", "R"].each do |direction|
+      path.add_step(path.node.edges.find { |edge| edge.direction == direction })
+    end
+    expect(path.checksum).to eq 19761398
   end
 end
