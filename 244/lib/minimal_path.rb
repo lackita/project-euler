@@ -11,6 +11,4 @@ start = Node.new([[" ", "R", "B", "B"],
                   ["R", "R", "B", "B"],
                   ["R", "R", "B", "B"]])
 
-if BFS.new(start, finish).confirm_path
-  print "finish found"
-end
+print BFS.new(start, finish).minimal_paths.map { |path| path.checksum }.inject :+

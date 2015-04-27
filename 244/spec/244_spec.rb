@@ -123,7 +123,7 @@ describe "graph node" do
   end
 end
 
-describe "checksum" do
+describe "path" do
   it "computes the example checksum correctly" do
     path = Path.new(Node.new([[" ", "R", "B", "B"],
                               ["R", "R", "B", "B"],
@@ -133,5 +133,31 @@ describe "checksum" do
       path.add_step(path.node.edges.find { |edge| edge.direction == direction })
     end
     expect(path.checksum).to eq 19761398
+  end
+
+  it "is not affected by actions to cloned copies" do
+    path = Path.new(Node.new([[" ", "R", "B", "B"],
+                              ["R", "R", "B", "B"],
+                              ["R", "R", "B", "B"],
+                              ["R", "R", "B", "B"]]))
+    new_path = path.clone
+    new_path.add_step(path.node.edges.first)
+    expect(path.checksum).to eq 0
+  end
+end
+
+describe "bfs" do
+  it "computes multiple paths of minimal length" do
+    start = Node.new([[" ", "R", "B", "B"],
+                      ["R", "R", "B", "B"],
+                      ["R", "R", "B", "B"],
+                      ["R", "R", "B", "B"]])
+
+    finish = Node.new([["R", "R", "B", "B"],
+                       ["R", " ", "B", "B"],
+                       ["R", "R", "B", "B"],
+                       ["R", "R", "B", "B"]])
+
+    expect(BFS.new(start, finish).minimal_paths.length).to eq 2
   end
 end
