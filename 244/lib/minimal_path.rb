@@ -1,5 +1,5 @@
-require 'graph'
-require 'search'
+require_relative 'graph'
+require_relative 'search'
 
 finish = Node.new([[" ", "B", "R", "B"],
                    ["B", "R", "B", "R"],
