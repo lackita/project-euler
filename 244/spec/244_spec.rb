@@ -6,21 +6,21 @@ describe "open slot" do
     expect(Node.new([[" ", "R", "B", "B"],
                      ["R", "R", "B", "B"],
                      ["R", "R", "B", "B"],
-                     ["R", "R", "B", "B"]]).open_slot).to eq TilePosition.new(0, 0)
+                     ["R", "R", "B", "B"]]).open_slot).to eq ({row: 0, col: 0})
   end
 
   it "is in the bottom right" do
     expect(Node.new([["R", "R", "B", "B"],
                      ["R", "R", "B", "B"],
                      ["R", "R", "B", "B"],
-                     ["R", "B", "B", " "]]).open_slot).to eq TilePosition.new(3, 3)
+                     ["R", "B", "B", " "]]).open_slot).to eq ({row: 3, col: 3})
   end
 
   it "is somewhere in the middle" do
     expect(Node.new([["R", "R", "B", "B"],
                      ["R", "R", "B", "B"],
                      ["R", " ", "B", "B"],
-                     ["R", "R", "B", "B"]]).open_slot).to eq TilePosition.new(2, 1)
+                     ["R", "R", "B", "B"]]).open_slot).to eq ({row: 2, col: 1})
   end
 end
 

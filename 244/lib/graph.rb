@@ -10,7 +10,7 @@ class Node
       @position.each_index do |row|
         @position[row].each_index do |col|
           if @position[row][col] == " "
-            return TilePosition.new(row, col)
+            return {row: row, col: col}
           end
         end
       end
@@ -20,19 +20,19 @@ class Node
   def edges
     edges = []
 
-    if open_slot.col > 0
+    if open_slot[:col] > 0
       edges.push(Edge.new(self, "R"))
     end
 
-    if open_slot.col < last_col
+    if open_slot[:col] < last_col
       edges.push(Edge.new(self, "L"))
     end
 
-    if open_slot.row > 0
+    if open_slot[:row] > 0
       edges.push(Edge.new(self, "D"))
     end
 
-    if open_slot.row < last_row
+    if open_slot[:row] < last_row
       edges.push(Edge.new(self, "U"))
     end
 
@@ -71,8 +71,8 @@ class Edge
   def new_position
     @new_position ||= begin
       new_position = @origin.position.map { |row| row.clone }
-      new_position[old_open_slot.row][old_open_slot.col] = new_position[new_open_slot.row][new_open_slot.col]
-      new_position[new_open_slot.row][new_open_slot.col] = " "
+      new_position[old_open_slot[:row]][old_open_slot[:col]] = new_position[new_open_slot[:row]][new_open_slot[:col]]
+      new_position[new_open_slot[:row]][new_open_slot[:col]] = " "
       new_position
     end
   end
@@ -83,26 +83,13 @@ class Edge
 
   def new_open_slot
     if @direction == "L"
-      TilePosition.new(@origin.open_slot.row, @origin.open_slot.col + 1)
+      {row: @origin.open_slot[:row], col: @origin.open_slot[:col] + 1}
     elsif @direction == "R"
-      TilePosition.new(@origin.open_slot.row, @origin.open_slot.col - 1)
+      {row: @origin.open_slot[:row], col: @origin.open_slot[:col] - 1}
     elsif @direction == "U"
-      TilePosition.new(@origin.open_slot.row + 1, @origin.open_slot.col)
+      {row: @origin.open_slot[:row] + 1, col: @origin.open_slot[:col]}
     elsif @direction == "D"
-      TilePosition.new(@origin.open_slot.row - 1, @origin.open_slot.col)
+      {row: @origin.open_slot[:row] - 1, col: @origin.open_slot[:col]}
     end
-  end
-end
-
-class TilePosition
-  attr_reader :row, :col
-
-  def initialize(row, col)
-    @row = row
-    @col = col
-  end
-
-  def ==(other_position)
-    @row == other_position.row and @col = other_position.col
   end
 end
